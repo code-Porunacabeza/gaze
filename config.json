@@ -1,0 +1,12 @@
+{
+
+  "save log to": "./testmylogs",
+  "random display order": true,
+  "scale": 1,
+  "loading wait": 2,
+  "font": "Helvetica",
+  "dark mode": true,
+  "insta review": true,
+  "guide mode": false,
+  "save path": "./save"
+}
