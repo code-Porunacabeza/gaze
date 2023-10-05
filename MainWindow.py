@@ -236,7 +236,7 @@ class MainWindow(QWidget):
         heatmap_name=image_name.split('.')[0]+'_heatmap.png'
         gaze_name=image_name.split('.')[0]+'_gaze.npy'
         onehot_name=image_name.split('.')[0]+'_onehot.npy'
-        points_name=image_name.split('.')[0]+'_points.npy'
+        points_name=image_name.split('.')[0]+'_points.npz'
         save_heatmap=os.path.join(self.savePath,'heatmap',heatmap_name)
         save_gaze=os.path.join(self.savePath,'gaze',gaze_name)
         save_onehot=os.path.join(self.savePath,'onehot',onehot_name)
