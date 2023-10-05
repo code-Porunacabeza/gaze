@@ -48,7 +48,7 @@ class Data:
         self.fileName = fileName
         self.classLabel = -1
         self.gazeData = []
-        self.preData = []
+        self.indexData = []
         self.bboxs = []
         self.userGazePoint = (-1, -1)
 class BlurHole():
@@ -236,13 +236,19 @@ class MainWindow(QWidget):
         heatmap_name=image_name.split('.')[0]+'_heatmap.png'
         gaze_name=image_name.split('.')[0]+'_gaze.npy'
         onehot_name=image_name.split('.')[0]+'_onehot.npy'
+        points_name=image_name.split('.')[0]+'_points.npy'
         save_heatmap=os.path.join(self.savePath,'heatmap',heatmap_name)
         save_gaze=os.path.join(self.savePath,'gaze',gaze_name)
         save_onehot=os.path.join(self.savePath,'onehot',onehot_name)
+        save_points=os.path.join(self.savePath,'points',points_name)
         if not os.path.exists(os.path.join(self.savePath,'heatmap')):
             os.makedirs(os.path.join(self.savePath,'heatmap'))
             os.makedirs(os.path.join(self.savePath,'gaze'))
             os.makedirs(os.path.join(self.savePath,'onehot'))
+            os.makedirs(os.path.join(self.savePath,'points'))
+        points=np.array(self.data.gazeData)
+        index=np.array(self.data.indexData)
+        np.savez(save_points, points=points,index=index)
         heat_img=cv2.resize(heat_img,(originalWeight, originalHeight))
         g=cv2.resize(g,(originalWeight, originalHeight))
         onehot=cv2.resize(onehot,(originalWeight, originalHeight))
@@ -315,5 +321,12 @@ class MainWindow(QWidget):
         #     self.data.gazeData.append(p)
         gaze = getPointInImage(gaze, self.getImageGeometry())
         self.data.gazeData.append(gaze)
+        self.data.indexData.append(0)
+        if len(self.data.gazeData) > 1:
+            pre_point = np.array(self.data.gazeData[-2])
+            point = np.array(self.data.gazeData[-1])
+            dist = (((point - pre_point) ** 2).sum() ** 0.5)
+            i = 1 if dist > 15 else 0
+            self.data.indexData[-1] = i
         image = self.blurHole.getHoleBlur(center=gaze)
         self.imageLabel.setPixmap(createPixmapFromArray(image))
